@@ -1,0 +1,10 @@
+When you want to build the project, for all features to work, the following must be true:
+
+1. You must have motive open, and there must be four different clusters attached to the user's left leg with the names "Pelvis", "Thigh", "Shank", and "Foot". Capitalization doesn't matter. You should also set the ground plane by (in Motive) going to Tools -> Coordinate System Tools, laying the Calibration Tool on the ground such that the "Front" arrow matches the direction the participant is facing, masking all other markers out of the scene, and clicking "Set Ground Plane". For a better demonstration of this, see this video: https://www.youtube.com/watch?v=3wf42p4cZv4&ab_channel=E.PeterWashabaugh
+
+2. Before building, go into the Player Settings in Unity and make sure that under Resolution and Presentation, Fullscreen Mode is set to Windowed.
+
+3. When you build the project in Unity, place it in the Builds folder. Make sure the following files are present:
+	
+- UnityPlugin.exe should be at the root of Builds, next to NeuRRoGait.exe, as well as one level deeper in NeuRRoGait_Data. This is important, as this is the file that lets the build communicate with Motive.
+- Copy Template Data Optitrak.txt from Assets > Logs > Templates > Load, and paste it into Builds > NeuRRoGait_Data > Logs > Templates > Load.
