@@ -308,7 +308,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
             if(logger.Log())
             {
                 logTime -= (currentTime - lastTime);
-                UpdateDisplayedTime(logTime.ToString("0.0"));
+                UpdateDisplayedTime((logTime / 10).ToString("0.0"));
                 if(logTime<=0)
                 {
                     LoggingButtonPress();
@@ -912,6 +912,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
     }
     public void CreateNewLogger()
     {
+        // CHECK ON IF 600 IS IMPORTANT
         logger = new FileIO(dataHeaders.Length, logger.filePath, logger.fileName + string.Format("_session-{0:yyyy-MM-dd_hh-mm-ss-tt}.txt", DateTime.Now), 600, dataHeaders, this);
         //logger = new FileIO(dataHeaders.Length, Application.dataPath + @"\Logs\", string.Format("session-{0:yyyy-MM-dd_hh-mm-ss-tt}.txt", DateTime.Now), 600, dataHeaders, this);
     }
