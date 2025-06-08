@@ -48,7 +48,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 38
+  controlID: 96
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -224,7 +224,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 133
+  controlID: 102
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -249,7 +249,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 134
+  controlID: 103
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -378,24 +378,24 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Images
+    - Assets/Scripts
     m_Globs: []
     m_OriginalText: 
     m_FilterByTypeIntersection: 0
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Images
+  - Assets/Scripts
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\evmarcus\Documents\GaitTracking\NeuRRoLabTracking\Gait
     Tracking Dev Path
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 800f0200
-    m_LastClickedID: 135040
-    m_ExpandedIDs: 000000000a740000c678000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 8}
+    m_SelectedIDs: 385b0000
+    m_LastClickedID: 23352
+    m_ExpandedIDs: 000000001e5b0000205b000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -423,7 +423,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 
+    m_ExpandedIDs: 000000001e5b0000205b0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -516,7 +516,7 @@ MonoBehaviour:
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
   m_LastInspectedObjectInstanceID: -1
-  m_LastVerticalScrollValue: 864
+  m_LastVerticalScrollValue: 0
   m_GlobalObjectId: 
   m_InspectorMode: 0
   m_LockTracker:
@@ -554,10 +554,10 @@ MonoBehaviour:
     m_OverlaysVisible: 1
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 240}
-      m_SelectedIDs: 6a770000
-      m_LastClickedID: 30570
-      m_ExpandedIDs: 54fafdffd66dfeffdcbffeffa4f9feffa8f9feffaaf9feffacf9feff6624ffff9a24ffffa024ffffb024ffffbc24ffffcc34ffff5450ffff5c50ffff5e55ffff345cffff246cfffff6d6ffff6adbffff78dcffffde740000e6740000a67500002277000036770000f077000056780000
+      scrollPos: {x: 0, y: 132}
+      m_SelectedIDs: 6e580000
+      m_LastClickedID: 22638
+      m_ExpandedIDs: 38fbffff9056000080580000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -918,9 +918,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 800.7956, y: 184.8784, z: 1711.9592}
+    m_Target: {x: 806.0718, y: 184.87642, z: 1712.0574}
     speed: 2
-    m_Value: {x: 800.7956, y: 184.8784, z: 1711.9592}
+    m_Value: {x: 806.0718, y: 184.87642, z: 1712.0574}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -971,9 +971,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: -0.026995609, y: 0.009301906, z: -0.00025199645, w: -0.99959224}
   m_Size:
-    m_Target: 968.1697
+    m_Target: 962.30005
     speed: 2
-    m_Value: 968.1697
+    m_Value: 962.30005
   m_Ortho:
     m_Target: 0
     speed: 2

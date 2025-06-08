@@ -216,7 +216,10 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
                 interpolationPoints[0] = point;
                 if (interpAction == SetHipJoint)
                 {
-                    display.text = "ASIS2: (Right front of pelvis)";
+                    if (leg == "Left")
+                        display.text = "ASIS2: (Right front of pelvis)";
+                    else
+                        display.text = "ASIS2: (Left front of pelvis)";
                 }
                 else if (interpAction == SetKneeJoint)
                 {
@@ -243,7 +246,10 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
                 }
                 else
                 {
-                    display.text = "PSIS1: (Left back of pelvis)";
+                    if (leg == "Left")
+                        display.text = "PSIS1: (Left back of pelvis)";
+                    else
+                        display.text = "PSIS1: (Right back of pelvis)";
                 }
             }
             else if (interpolationPoints[2] == null)
@@ -253,7 +259,10 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
                 point.transform.position = stylusPoint.transform.position;
                 point.transform.parent = virtualParent.transform;
                 interpolationPoints[2] = point;
-                display.text = "PSIS2: (Right back of pelvis)";
+                if (leg == "Left")
+                    display.text = "PSIS2: (Right back of pelvis)";
+                else
+                    display.text = "PSIS2: (Left back of pelvis)";
             }
             else if (interpolationPoints[3] == null)
             {
@@ -593,7 +602,10 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         interpAction = SetHipJoint;
         virtualParent = pelvis;
         interpolatingPoint = true;
-        display.text = "ASIS1: (Left front of pelvis) (Right click to set)";
+        if (leg == "Left")
+            display.text = "ASIS1: (Left front of pelvis) (Right click to set)";
+        else
+            display.text = "ASIS1: (Right front of pelvis) (Right click to set)";
     }
     public void SetHipJoint(Vector3 lerpPoint)
     {
