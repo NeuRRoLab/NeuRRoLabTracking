@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System;
+using Unity.VisualScripting;
 
 class FileIO
 {
@@ -8,8 +9,8 @@ class FileIO
     int linesWritten;
     int lastLineSaved;
     int columns;
-    public string filePath;
-    public string fileName;
+    string filePath;
+    string fileName;
     int linesPerCommit;
     StreamWriter writer;
     bool dirty;
@@ -42,10 +43,10 @@ class FileIO
         {
             System.IO.Directory.CreateDirectory(filepath);
         }
-        if (!System.IO.Directory.Exists(filepath+ @"Templates\Load"))
-        {
-            System.IO.Directory.CreateDirectory(filepath + @"Templates\Load");
-        }
+        //if (!System.IO.Directory.Exists(filepath + @"Templates\Load"))
+        //{
+        //    System.IO.Directory.CreateDirectory(filepath + @"Templates\Load");
+        //}
 
         loggingString = new string[columns];
         linesWritten = 0;
@@ -54,13 +55,25 @@ class FileIO
         SetFilePath(filepath);
         this.handler = handler;
 
-        writer = new StreamWriter(filePath+fileName);
-        handler.SetDefaultPaths(filePath, fileName);
+        string fullPath = Path.Combine(filePath, fileName);
+
+        // Open in append mode if file exists, else create new
+        if (File.Exists(fullPath))
+        {
+            writer = new StreamWriter(fullPath, append: true); // append = true
+        }
+        else
+        {
+            writer = new StreamWriter(fullPath, append: false); // create new
+        }
+
+        //writer = new StreamWriter(filePath + "/" + fileName);
+        //handler.SetDefaultPaths(filePath, fileName);
         this.linesPerCommit = linesPerCommit;
         dirty = false;
         logging = false;
 
-        for(int i = 0; i < columns; i++)
+        for (int i = 0; i < columns; i++)
         {
             loggingString[i] = string.Empty;
         }
@@ -71,7 +84,7 @@ class FileIO
     {
         if (logging)
         {
-            if(dirty)
+            if (dirty)
             {
                 string psring = string.Empty;
                 for (int i = 0; i < columns; i++)
@@ -96,7 +109,7 @@ class FileIO
     }
     public void exitLog()
     {
-        if(dataProcessingCorrections.Count > 0)
+        if (dataProcessingCorrections.Count > 0)
         {
             StreamReader processingReader = new StreamReader(filePath + fileName);
             string processedFileName = fileName.Insert(fileName.Length - 4, "_processed");
@@ -107,7 +120,7 @@ class FileIO
             while (correction != null && currentLine < linesWritten)
             {
                 string line = processingReader.ReadLine();
-                if(currentLine == correction.getLine())
+                if (currentLine == correction.getLine())
                 {
                     bool sameLine = true;
                     string[] columns = line.Split('\t');
@@ -121,19 +134,19 @@ class FileIO
                         }
                         else
                         {
-                                for (int index = column;  column < columns.Length; column++)
+                            for (int index = column; column < columns.Length; column++)
+                            {
+                                if (index == correction.getColumn())
                                 {
-                                    if(index == correction.getColumn())
-                                    {
-                                        columns[column] = correction.getData();
+                                    columns[column] = correction.getData();
                                     break;
-                                    }
-                                    else if (!prior.Equals('\t') && !columns[index].Equals('\t'))
-                                    {
-                                        prior = columns[index];
-                                        index++;
-                                    }
                                 }
+                                else if (!prior.Equals('\t') && !columns[index].Equals('\t'))
+                                {
+                                    prior = columns[index];
+                                    index++;
+                                }
+                            }
                         }
                         correction = dataProcessingCorrections.Dequeue();
                         if (correction.getLine() != currentLine)
@@ -144,7 +157,7 @@ class FileIO
                 }
                 currentLine++;
             }
-            if(correction!=null)
+            if (correction != null)
             {
                 throw new IndexOutOfRangeException("Processing correction still pending after end of file!");
             }
@@ -182,7 +195,7 @@ class FileIO
     public bool toggleLogging()
     {
         logging = !logging;
-        if(!logging)
+        if (!logging)
         {
             exitLog();
         }
@@ -210,7 +223,7 @@ class FileIO
     }
     public void pushCorrections(Queue<dataCorrection> corrections)
     {
-        while(corrections.Count>0)
+        while (corrections.Count > 0)
         {
             dataProcessingCorrections.Enqueue(corrections.Dequeue());
         }
@@ -275,5 +288,14 @@ class FileIO
         }
         file.Close();
         return vectors;
+    }
+
+    public void StopLogging()
+    {
+        if (writer != null)
+        {
+            writer.Close();    // Safely close the writer
+            writer.Dispose(); // Optionally dispose for extra safety
+        }
     }
 }

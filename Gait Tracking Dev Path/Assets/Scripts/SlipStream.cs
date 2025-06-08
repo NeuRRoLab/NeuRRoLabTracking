@@ -128,7 +128,7 @@ public class SlipStream : MonoBehaviour
         return 0;
 	}
  
-	void Update()
+	void FixedUpdate() // The only major update from the 2016 version, and there's no reason given for why this is here
 	{
 		UDPRead();
 	}

@@ -2,6 +2,8 @@
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
 
 public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
 
@@ -69,6 +71,8 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
     float medialP = 0.11f;
     float posteriorP = 0.21f;
 
+    int trialNumber = 1;
+
     private enum headers
     {
         TimeStamp,
@@ -98,6 +102,13 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
             "Hip OffPitch", "Hip OffRoll", "Hip OffYaw",
             "Knee OffPitch", "Knee OffRoll", "Knee OffYaw",
             "Ankle OffPitch","Ankle OffRoll","Ankle OffYaw"};
+
+    public string filePath = "";
+    public string fileName = "";
+    public string patientCode = "DefaultPatientCode";
+    public string behavior = "Basic";
+    public string leg = "Right";
+    public int day = 1;
 
     void Awake()
     {
@@ -165,8 +176,10 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
             "Hip OffPitch", "Hip OffRoll", "Hip OffYaw",
             "Knee OffPitch", "Knee OffRoll", "Knee OffYaw",
             "Ankle OffPitch","Ankle OffRoll","Ankle OffYaw"};*/
-        
+
         // TODO: Check if this line is callable multiple times to get multiple logs
+        filePath = Application.dataPath + @"\Logs\";
+        fileName = string.Format("session-{0:yyyy-MM-dd_hh-mm-ss-tt}", DateTime.Now);
         logger = new FileIO(dataHeaders.Length, Application.dataPath + @"\Logs\", string.Format("session-{0:yyyy-MM-dd_hh-mm-ss-tt}.txt", DateTime.Now), 600, dataHeaders, this);
 
         anklePoints = new Queue<Vector3>();
@@ -898,23 +911,141 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
             logTime = float.Parse(input);
         }
     }
+
+    public void SetPatientCode()
+    {
+        string input = GameObject.Find("PatientCodeInput").GetComponent<InputField>().text;
+        patientCode = input;
+    }
+    public void SetBehavior()
+    {
+        Dropdown dropdown = GameObject.Find("BehaviorInput").GetComponent<Dropdown>();
+        int selectedIndex = dropdown.value;
+        string input = dropdown.options[selectedIndex].text;
+        behavior = input;
+    }
+    public void SetLegSide()
+    {
+        Dropdown dropdown = GameObject.Find("LegInput").GetComponent<Dropdown>();
+        int selectedIndex = dropdown.value;
+        string input = dropdown.options[selectedIndex].text;
+        leg = input;
+    }
     public void SetFilePath()
     {
-        string input = GameObject.Find("FilePathInput").GetComponent<InputField>().text;
-        logger.SetFilePath(input);
+        filePath = GameObject.Find("FilePathInput").GetComponent<InputField>().text;
+
+        if (!System.IO.Directory.Exists(filePath))
+        {
+            System.IO.Directory.CreateDirectory(filePath);
+        }
+
+        //logger.SetFilePath(filePath);
         CreateNewLogger();
     }
     public void SetFileName()
     {
-        string input = GameObject.Find("FileNameInput").GetComponent<InputField>().text;
-        logger.SetFileName(input);
+        fileName = GameObject.Find("FileNameInput").GetComponent<InputField>().text;
+        //logger.SetFileName(input);
         CreateNewLogger();
     }
+    public void SetDay()
+    {
+        string textValue = GameObject.Find("DayInput").GetComponent<InputField>().text;
+        int result;
+
+        if (int.TryParse(textValue, out result))
+        {
+            Debug.Log("Parsed integer: " + result);
+            day = result;
+        }
+        else
+        {
+            Debug.LogWarning("Invalid integer input: " + textValue);
+            return;
+        }
+
+        if (patientCode == "DefaultPatientCode") return;
+
+        filePath = Application.dataPath + @"/Logs/" + patientCode + "/" + textValue + "/";
+
+        //string path = EditorUtility.SaveFolderPanel("Save logging data to", filepath, "");
+
+        //if (path == "") path = filepath;
+
+        GameObject.Find("FilePathInput").GetComponent<InputField>().text = filePath;
+        SetFilePath();
+    }
+
+    public void CreateDefaultFileName()
+    {
+        Debug.Log(patientCode);
+        fileName = patientCode + "_" + leg + "_" + behavior + "_" + trialNumber;
+        GameObject.Find("FileNameInput").GetComponent<InputField>().text = fileName;
+        SetFileName();
+    }
+    public void OpenFolderExplorer()
+    {
+        string filepath = EditorUtility.OpenFolderPanel("", filePath, "");
+        if (filepath != "")
+        {
+            Debug.Log(filepath);
+            GameObject.Find("FilePathInput").GetComponent<InputField>().text = filepath;
+            SetFilePath();
+        }
+    }
+
+    public void OpenFileExplorer()
+    {
+        string filepath = EditorUtility.OpenFilePanel(fileName, filePath, "txt");
+        if (filepath != "")
+        {
+            Debug.Log(filepath);
+            string name = Path.GetFileNameWithoutExtension(filepath);
+            GameObject.Find("FileNameInput").GetComponent<InputField>().text = name;
+            SetFileName();
+        }
+    }
+
     public void CreateNewLogger()
     {
+        if (fileName == "" || filePath == "") return;
+
+        if (logger != null) logger.StopLogging();
+
         // CHECK ON IF 600 IS IMPORTANT
-        logger = new FileIO(dataHeaders.Length, logger.filePath, logger.fileName + string.Format("_session-{0:yyyy-MM-dd_hh-mm-ss-tt}.txt", DateTime.Now), 600, dataHeaders, this);
+        logger = new FileIO(dataHeaders.Length, filePath, fileName + ".txt", 600, dataHeaders, this);
+        //logger = new FileIO(dataHeaders.Length, logger.filePath, logger.fileName + string.Format("_session-{0:yyyy-MM-dd_hh-mm-ss-tt}.txt", DateTime.Now), 600, dataHeaders, this);
         //logger = new FileIO(dataHeaders.Length, Application.dataPath + @"\Logs\", string.Format("session-{0:yyyy-MM-dd_hh-mm-ss-tt}.txt", DateTime.Now), 600, dataHeaders, this);
+    }
+
+    public void ChangeTrialNumber()
+    {
+        string textValue = GameObject.Find("TrialNumberInput").GetComponent<InputField>().text;
+        int result;
+
+        if (int.TryParse(textValue, out result))
+        {
+            Debug.Log("Parsed integer: " + result);
+            trialNumber = result;
+        }
+        else
+        {
+            Debug.LogWarning("Invalid integer input: " + textValue);
+            return;
+        }
+
+        if (patientCode == "DefaultPatientCode")
+        {
+            fileName = fileName + "_" + trialNumber;
+        }
+        else
+        {
+            fileName = patientCode + "_" + leg + "_" + behavior + "_" + trialNumber;
+        }
+
+        GameObject.Find("FileNameInput").GetComponent<InputField>().text = fileName;
+        SetFileName();
     }
     public void SetDefaultPaths(string filePath, string fileName)
     {

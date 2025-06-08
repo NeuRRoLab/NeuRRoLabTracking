@@ -173,7 +173,7 @@ public class CameraController : MonoBehaviour {
     {
         if(showingMenu)
         {
-            GameObject.Find("CameraMenu").GetComponent<RectTransform>().anchoredPosition = new Vector2(0, Screen.height*2);
+            GameObject.Find("CameraMenu").GetComponent<RectTransform>().anchoredPosition = new Vector2(0, Screen.height*4);
             showingMenu = false;
         }
         else
