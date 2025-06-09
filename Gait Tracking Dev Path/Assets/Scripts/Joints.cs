@@ -57,7 +57,10 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
     int currentPoint;
     int capacity;
 
-    float logTime;
+    //float logTime;
+    float totalTime = 60;
+    float elapsedTime = 0;
+    Text elapsedTimeDisplay;
 
     public enum jointAnglesEnum : int {hipAngle, kneeAngle, ankleAngle};
     public enum jointEnum : int {hipJoint, hipJointPartner, kneeJoint, kneeJointPartner, ankleJoint, ankleJointPartner};
@@ -141,9 +144,13 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         ankleAngleDisplay = GameObject.Find("AnkleAngleDisplay");
         display = GameObject.Find("Display").GetComponent<Text>();
 
-        logTime = 60;
+        //logTime = 60;
         lastTime = 0;
         currentTime = 0;
+        totalTime = 60;
+        elapsedTime = 0;
+
+        elapsedTimeDisplay = GameObject.Find("TimeElapsedText").GetComponent<Text>();
 
         tPosed = false;
         interpolatingPoint = false;
@@ -329,15 +336,34 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
             Snapshot();
             if(logger.Log())
             {
-                logTime -= (currentTime - lastTime);
-                UpdateDisplayedTime((logTime / 10).ToString("0.0"));
-                if(logTime<=0)
+                //logTime -= (currentTime - lastTime);
+                elapsedTime += (currentTime - lastTime);
+                //UpdateDisplayedTime((logTime).ToString("0.0"));
+                elapsedTimeDisplay.text = (elapsedTime).ToString("0.00");
+                //if (logTime<=0 || elapsedTime >= totalTime)
+                if (elapsedTime >= totalTime)
                 {
                     LoggingButtonPress();
-                    logTime = 0;
+                    //logTime = 0;
+                    elapsedTime = 0;
+                    elapsedTimeDisplay.text = (elapsedTime).ToString("0");
                 }
             }
         }
+
+        /*if (logger.Log())
+        {
+            elapsedTime += Time.deltaTime;
+            //elapsedTime += (currentTime - lastTime);
+            Debug.Log(elapsedTime);
+            elapsedTimeDisplay.text = (elapsedTime).ToString("0.00");
+            if (elapsedTime >= totalTime)
+            {
+                LoggingButtonPress();
+                elapsedTime = 0;
+                elapsedTimeDisplay.text = (elapsedTime).ToString("0.00");
+            }
+        }*/
     }
 
     private void bodyLost(int body, Queue<int> columns)
@@ -870,14 +896,14 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
             GameObject.Find("Logging").GetComponent<Image>().color = Color.green;
             GameObject.Find("FilePathInput").GetComponent<InputField>().interactable = false;
             GameObject.Find("FileNameInput").GetComponent<InputField>().interactable = false;
-            GameObject.Find("LogInput").GetComponent<InputField>().interactable = false;
+            //GameObject.Find("LogInput").GetComponent<InputField>().interactable = false;
         }
         else
         {
             GameObject.Find("Logging").GetComponent<Image>().color = Color.white;
             GameObject.Find("FilePathInput").GetComponent<InputField>().interactable = true;
             GameObject.Find("FileNameInput").GetComponent<InputField>().interactable = true;
-            GameObject.Find("LogInput").GetComponent<InputField>().interactable = true;
+            //GameObject.Find("LogInput").GetComponent<InputField>().interactable = true;
         }
     }
     public void VMShowButtonPress()
@@ -920,8 +946,14 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         if (GameObject.Find("LogInput").GetComponent<InputField>().IsInteractable())
         {
             string input = GameObject.Find("LogInput").GetComponent<InputField>().text;
-            logTime = float.Parse(input);
+            //logTime = float.Parse(input);
         }
+    }
+
+    public void SetTotalTime()
+    {
+        string input = GameObject.Find("TimeTotalInput").GetComponent<InputField>().text;
+        totalTime = float.Parse(input);
     }
 
     public void SetPatientCode()
