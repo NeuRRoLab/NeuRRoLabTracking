@@ -345,6 +345,7 @@
 "Assets/Scripts/SlipStream.cs"
 "Assets/Scripts/Stylus.cs"
 "Assets/Scripts/TargetMatching.cs"
+"Assets/ToastManager.cs"
 -langversion:9.0
 /deterministic
 /optimize+

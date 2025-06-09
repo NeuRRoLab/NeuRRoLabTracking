@@ -109,9 +109,11 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
     public string filePath = "";
     public string fileName = "";
     public string patientCode = "DefaultPatientCode";
-    public string behavior = "Basic";
+    public string behavior = "Baseline";
     public string leg = "Right";
     public int day = 1;
+
+    bool patientDataSet = false;
 
     void Awake()
     {
@@ -185,9 +187,9 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
             "Ankle OffPitch","Ankle OffRoll","Ankle OffYaw"};*/
 
         // TODO: Check if this line is callable multiple times to get multiple logs
-        filePath = Application.dataPath + @"\Logs\";
-        fileName = string.Format("session-{0:yyyy-MM-dd_hh-mm-ss-tt}", DateTime.Now);
-        logger = new FileIO(dataHeaders.Length, Application.dataPath + @"\Logs\", string.Format("session-{0:yyyy-MM-dd_hh-mm-ss-tt}.txt", DateTime.Now), 600, dataHeaders, this);
+        //filePath = Application.dataPath + @"\Logs\";
+        //fileName = string.Format("session-{0:yyyy-MM-dd_hh-mm-ss-tt}", DateTime.Now);
+        //logger = new FileIO(dataHeaders.Length, Application.dataPath + @"\Logs\", string.Format("session-{0:yyyy-MM-dd_hh-mm-ss-tt}.txt", DateTime.Now), 600, dataHeaders, this);
 
         anklePoints = new Queue<Vector3>();
         currentPoint = 0;
@@ -205,6 +207,8 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         ChangeDistalPercent();
         ChangeMedialPercent();
         ChangePosteriorPercent();
+
+        behavior = "Baseline";
     }
 
     // Update is called once per frame
@@ -347,6 +351,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
                     //logTime = 0;
                     elapsedTime = 0;
                     elapsedTimeDisplay.text = (elapsedTime).ToString("0");
+                    updateTrialNumber(trialNumber + 1);
                 }
             }
         }
@@ -891,6 +896,14 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
 
     public void LoggingButtonPress()
     {
+        CheckIfPatientDataSet();
+
+        if (!patientDataSet)
+        {
+            ThrowPatientCodeError(); 
+            return;
+        }
+
         if(logger.toggleLogging())
         {
             GameObject.Find("Logging").GetComponent<Image>().color = Color.green;
@@ -960,6 +973,17 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
     {
         string input = GameObject.Find("PatientCodeInput").GetComponent<InputField>().text;
         patientCode = input;
+
+        filePath = Application.dataPath + @"/Logs/" + patientCode + "/" + day.ToString() + "/";
+
+        //string path = EditorUtility.SaveFolderPanel("Save logging data to", filepath, "");
+
+        //if (path == "") path = filepath;
+
+        GameObject.Find("FilePathInput").GetComponent<InputField>().text = filePath;
+        SetFilePath();
+        patientDataSet = true;
+        CreateDefaultFileName();
     }
     public void SetBehavior()
     {
@@ -967,6 +991,15 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         int selectedIndex = dropdown.value;
         string input = dropdown.options[selectedIndex].text;
         behavior = input;
+
+        int nextTrial = 1;
+        string file = Path.Combine(filePath, patientCode + "_" + leg + "_" + behavior + "_" + nextTrial + ".txt");
+        while (File.Exists(file))
+        {
+            nextTrial++;
+            file = Path.Combine(filePath, patientCode + "_" + leg + "_" + behavior + "_" + nextTrial + ".txt");
+        }
+        updateTrialNumber(nextTrial);
     }
     public void SetLegSide()
     {
@@ -985,13 +1018,17 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         }
 
         //logger.SetFilePath(filePath);
-        CreateNewLogger();
+        CheckIfPatientDataSet();
+        if (patientDataSet)
+            CreateNewLogger();
     }
     public void SetFileName()
     {
         fileName = GameObject.Find("FileNameInput").GetComponent<InputField>().text;
         //logger.SetFileName(input);
-        CreateNewLogger();
+        CheckIfPatientDataSet();
+        if (patientDataSet)
+            CreateNewLogger();
     }
     public void SetDay()
     {
@@ -1010,15 +1047,6 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         }
 
         if (patientCode == "DefaultPatientCode") return;
-
-        filePath = Application.dataPath + @"/Logs/" + patientCode + "/" + textValue + "/";
-
-        //string path = EditorUtility.SaveFolderPanel("Save logging data to", filepath, "");
-
-        //if (path == "") path = filepath;
-
-        GameObject.Find("FilePathInput").GetComponent<InputField>().text = filePath;
-        SetFilePath();
     }
 
     public void CreateDefaultFileName()
@@ -1065,31 +1093,61 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
 
     public void ChangeTrialNumber()
     {
+        CheckIfPatientDataSet();
+        if (!patientDataSet)
+        {
+            ThrowPatientCodeError();
+            GameObject.Find("TrialNumberInput").GetComponent<InputField>().text = trialNumber.ToString();
+            return;
+        }
+
+        string textValue = GameObject.Find("TrialNumberInput").GetComponent<InputField>().text;
+        int result;
+
+        // Check if the input is a valid integer
+        if (int.TryParse(textValue, out result))
+        {
+            string tempFile = Path.Combine(filePath, patientCode + "_" + leg + "_" + behavior + "_" + result + ".txt");
+            Debug.Log(tempFile);
+            Debug.Log("File exists is " + File.Exists(tempFile));
+            if (File.Exists(tempFile))
+            {
+                Toast toast = new Toast("File for that trial already exists. Are you sure you want to add on to it?", ChooseUpdateTrialNumber, ChooseNotToUpdateTrialNumber);
+                GameObject.Find("ToastPanel").GetComponent<ToastManager>().RequestToast(toast);
+                Debug.Log("Requested toast!");
+            }
+            else
+            {
+                trialNumber = result;
+
+                fileName = patientCode + "_" + leg + "_" + behavior + "_" + trialNumber;
+                GameObject.Find("FileNameInput").GetComponent<InputField>().text = fileName;
+                SetFileName();
+            }
+        }
+        else
+        {
+            GameObject.Find("TrialNumberInput").GetComponent<InputField>().text = trialNumber.ToString();
+            return;
+        }
+    }
+
+    void ChooseNotToUpdateTrialNumber()
+    {
+        GameObject.Find("TrialNumberInput").GetComponent<InputField>().text = trialNumber.ToString();
+    }
+    void ChooseUpdateTrialNumber()
+    {
         string textValue = GameObject.Find("TrialNumberInput").GetComponent<InputField>().text;
         int result;
 
         if (int.TryParse(textValue, out result))
         {
-            Debug.Log("Parsed integer: " + result);
             trialNumber = result;
-        }
-        else
-        {
-            Debug.LogWarning("Invalid integer input: " + textValue);
-            return;
-        }
-
-        if (patientCode == "DefaultPatientCode")
-        {
-            fileName = fileName + "_" + trialNumber;
-        }
-        else
-        {
             fileName = patientCode + "_" + leg + "_" + behavior + "_" + trialNumber;
+            GameObject.Find("FileNameInput").GetComponent<InputField>().text = fileName;
+            SetFileName();
         }
-
-        GameObject.Find("FileNameInput").GetComponent<InputField>().text = fileName;
-        SetFileName();
     }
     public void SetDefaultPaths(string filePath, string fileName)
     {
@@ -1114,6 +1172,24 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
     public void showAnklePathButton()
     {
         anklePathRendererObject.GetComponent<LineRenderer>().enabled = !anklePathRendererObject.GetComponent<LineRenderer>().enabled;
+    }
+    public void updateTrialNumber(int number)
+    {
+        trialNumber = number;
+        GameObject.Find("TrialNumberInput").GetComponent<InputField>().text = trialNumber.ToString();
+        ChangeTrialNumber();
+    }
+
+    public void CheckIfPatientDataSet()
+    {
+        if (patientCode == "DefaultPatientCode") patientDataSet = false;
+    }
+
+    private void ThrowPatientCodeError()
+    {
+        string message = "Please set a patient code to continue.";
+        Toast toast = new Toast(message);
+        GameObject.Find("ToastPanel").GetComponent<ToastManager>().RequestToast(toast);
     }
     
 }
