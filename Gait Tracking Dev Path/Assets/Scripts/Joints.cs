@@ -1,9 +1,11 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.IO;
 using UnityEditor;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
 
@@ -55,7 +57,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
 
     Queue<Vector3> anklePoints;
     int currentPoint;
-    int capacity;
+    public int capacity = 240;
 
     //float logTime;
     float totalTime = 60;
@@ -193,7 +195,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
 
         anklePoints = new Queue<Vector3>();
         currentPoint = 0;
-        capacity = 240;
+        //capacity = 240;
 
         anklePathRendererObject = GameObject.Find("AnklePathRendererObject");
         anklePathRendererObject.GetComponent<LineRenderer>().SetVertexCount(capacity);
@@ -208,7 +210,8 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         ChangeMedialPercent();
         ChangePosteriorPercent();
 
-        behavior = "Baseline";
+        if (behavior == "Basic")
+            behavior = "Baseline";
     }
 
     // Update is called once per frame
@@ -963,12 +966,14 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         }
     }
 
+    // Set by changing the total time box in the UI
     public void SetTotalTime()
     {
         string input = GameObject.Find("TimeTotalInput").GetComponent<InputField>().text;
         totalTime = float.Parse(input);
     }
 
+    // Called when the patient code is changed in the UI, updates the filePath to a new folder of that patient
     public void SetPatientCode()
     {
         string input = GameObject.Find("PatientCodeInput").GetComponent<InputField>().text;
@@ -985,6 +990,8 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         patientDataSet = true;
         CreateDefaultFileName();
     }
+
+    // Called when the Behavior is changed in the UI behavior dropdown, and automatically sets the trial number to whatever the next trial in that behavior should be, starting at 1
     public void SetBehavior()
     {
         Dropdown dropdown = GameObject.Find("BehaviorInput").GetComponent<Dropdown>();
@@ -1001,6 +1008,8 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         }
         updateTrialNumber(nextTrial);
     }
+
+    // Called when the leg side is changed in the UI, affects calibration prompts for hip calibration
     public void SetLegSide()
     {
         Dropdown dropdown = GameObject.Find("LegInput").GetComponent<Dropdown>();
@@ -1008,6 +1017,8 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         string input = dropdown.options[selectedIndex].text;
         leg = input;
     }
+
+    // Sets file path to whatever is in the filePath UI text box and then creates a new logger to reflect the new file path, creating the path if it has to
     public void SetFilePath()
     {
         filePath = GameObject.Find("FilePathInput").GetComponent<InputField>().text;
@@ -1022,6 +1033,8 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         if (patientDataSet)
             CreateNewLogger();
     }
+
+    // Sets file name to whatever is in the fileName UI text box and then creates a new logger to reflect the new file name
     public void SetFileName()
     {
         fileName = GameObject.Find("FileNameInput").GetComponent<InputField>().text;
@@ -1030,6 +1043,8 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         if (patientDataSet)
             CreateNewLogger();
     }
+
+    // Called when the Day number is changed in the UI
     public void SetDay()
     {
         string textValue = GameObject.Find("DayInput").GetComponent<InputField>().text;
@@ -1045,17 +1060,23 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
             Debug.LogWarning("Invalid integer input: " + textValue);
             return;
         }
-
-        if (patientCode == "DefaultPatientCode") return;
     }
 
+    // Called when the blue button next to the file name UI is pressed
     public void CreateDefaultFileName()
     {
-        Debug.Log(patientCode);
+        CheckIfPatientDataSet();
+        if (!patientDataSet)
+        {
+            ThrowPatientCodeError();
+            return;
+        }
         fileName = patientCode + "_" + leg + "_" + behavior + "_" + trialNumber;
         GameObject.Find("FileNameInput").GetComponent<InputField>().text = fileName;
         SetFileName();
     }
+
+    // Called when the file explorer icon next to the file path UI is pressed
     public void OpenFolderExplorer()
     {
         string filepath = EditorUtility.OpenFolderPanel("", filePath, "");
@@ -1067,6 +1088,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         }
     }
 
+    // Called when the file explorer icon next to the file name UI is pressed
     public void OpenFileExplorer()
     {
         string filepath = EditorUtility.OpenFilePanel(fileName, filePath, "txt");
@@ -1079,6 +1101,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         }
     }
 
+    // Called by various conditions when the logger needs to be updated, like changing the parameters of the test in the menu, or when the trial number gets updated
     public void CreateNewLogger()
     {
         if (fileName == "" || filePath == "") return;
@@ -1091,6 +1114,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         //logger = new FileIO(dataHeaders.Length, Application.dataPath + @"\Logs\", string.Format("session-{0:yyyy-MM-dd_hh-mm-ss-tt}.txt", DateTime.Now), 600, dataHeaders, this);
     }
 
+    // This is what's called when the trial number is manually changed in the UI, or when updateTrialNumber() is called by the code
     public void ChangeTrialNumber()
     {
         CheckIfPatientDataSet();
@@ -1132,10 +1156,13 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         }
     }
 
+    // This is called by the toast that is sent when the user tries to change the trial number to something that's already been logged when No is selected
     void ChooseNotToUpdateTrialNumber()
     {
         GameObject.Find("TrialNumberInput").GetComponent<InputField>().text = trialNumber.ToString();
     }
+
+    // This is called by the toast that is sent when the user tries to change the trial number to something that's already been logged when Yes is selected
     void ChooseUpdateTrialNumber()
     {
         string textValue = GameObject.Find("TrialNumberInput").GetComponent<InputField>().text;
@@ -1160,7 +1187,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
     }
     private void GUISafety()
     {
-        foreach(GameObject button in GameObject.FindGameObjectsWithTag("PosedDependant"))
+        foreach (GameObject button in GameObject.FindGameObjectsWithTag("PosedDependant"))
         {
             button.GetComponent<Button>().interactable = !button.GetComponent<Button>().interactable;
         }
@@ -1173,6 +1200,8 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
     {
         anklePathRendererObject.GetComponent<LineRenderer>().enabled = !anklePathRendererObject.GetComponent<LineRenderer>().enabled;
     }
+
+    // Call this to change the trial number in code to respect the interface
     public void updateTrialNumber(int number)
     {
         trialNumber = number;
@@ -1180,16 +1209,36 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         ChangeTrialNumber();
     }
 
+    // Checks if the user has inputted a patient code and updates patientDataSet accordingly
     public void CheckIfPatientDataSet()
     {
         if (patientCode == "DefaultPatientCode") patientDataSet = false;
     }
 
+    // Sends out a toast when the user tries to Log data or change the trial number before setting the Patient Code
     private void ThrowPatientCodeError()
     {
         string message = "Please set a patient code to continue.";
         Toast toast = new Toast(message);
         GameObject.Find("ToastPanel").GetComponent<ToastManager>().RequestToast(toast);
     }
-    
+
+    public void ResetCalibration()
+    {
+        string message = "Are you sure you want to reset calibration?";
+        Toast toast = new Toast(message, ReloadScene, DoNothing);
+        GameObject.Find("ToastPanel").GetComponent<ToastManager>().RequestToast(toast);
+    }
+
+    private void ReloadScene()
+    {
+        PatientDataManager manager = GameObject.Find("PatientDataManager").GetComponent<PatientDataManager>();
+        manager.SetPatientData(patientCode, behavior, leg, day, trialNumber, totalTime, distalP, medialP, posteriorP, capacity);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    private void DoNothing()
+    {
+        return;
+    }
 }
