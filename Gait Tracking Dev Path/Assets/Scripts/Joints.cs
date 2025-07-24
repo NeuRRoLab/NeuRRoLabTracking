@@ -125,6 +125,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
     // Use this for initialization
     void Start ()
     {
+        PatientDataManager patientData = GameObject.Find("PatientDataManager").GetComponent<PatientDataManager>();
         camController = GameObject.Find("CameraController").GetComponent<CameraController>();
 
         inverter = 0;
@@ -151,7 +152,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         //logTime = 60;
         lastTime = 0;
         currentTime = 0;
-        totalTime = 60;
+        totalTime = patientData.totalTime;
         elapsedTime = 0;
 
         elapsedTimeDisplay = GameObject.Find("TimeElapsedText").GetComponent<Text>();
@@ -195,12 +196,13 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
 
         anklePoints = new Queue<Vector3>();
         currentPoint = 0;
-        //capacity = 240;
+        capacity = int.Parse(GameObject.Find("TrailInput").GetComponent<InputField>().text);
 
         anklePathRendererObject = GameObject.Find("AnklePathRendererObject");
-        anklePathRendererObject.GetComponent<LineRenderer>().SetVertexCount(capacity);
+        //anklePathRendererObject.GetComponent<LineRenderer>().SetVertexCount(capacity);
+        anklePathRendererObject.GetComponent<LineRenderer>().positionCount = capacity;
 
-        for(int i = 0; i < capacity; i++)
+        for (int i = 0; i < capacity; i++)
         {
             anklePathRendererObject.GetComponent<LineRenderer>().SetPosition(i, Vector3.zero);
             i++;
@@ -866,9 +868,10 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
     public void ChangeTrailLength()
     {
         string trailSize = GameObject.Find("TrailInput").GetComponent<InputField>().text;
-        Debug.Log(trailSize);
+        //Debug.Log(trailSize);
         capacity = int.Parse(trailSize);
-        anklePathRendererObject.GetComponent<LineRenderer>().SetVertexCount(capacity);
+        //anklePathRendererObject.GetComponent<LineRenderer>().SetVertexCount(capacity);
+        anklePathRendererObject.GetComponent<LineRenderer>().positionCount = capacity;
     }
 
     public void ChangeDistalPercent()
@@ -1233,7 +1236,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
     private void ReloadScene()
     {
         PatientDataManager manager = GameObject.Find("PatientDataManager").GetComponent<PatientDataManager>();
-        manager.SetPatientData(patientCode, behavior, leg, day, trialNumber, totalTime, distalP, medialP, posteriorP, capacity);
+        manager.SetPatientData(patientCode, behavior, leg, day, trialNumber, totalTime, capacity);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 

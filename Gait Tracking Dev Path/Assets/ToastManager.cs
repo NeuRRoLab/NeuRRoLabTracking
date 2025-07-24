@@ -49,7 +49,7 @@ public class ToastManager : MonoBehaviour
     {
         restPosition = transform.position;
         viewPosition = new Vector3(restPosition.x, Screen.height / 2, restPosition.z);
-        Debug.Log(restPosition);
+        //Debug.Log(restPosition);
     }
 
     private void Update()

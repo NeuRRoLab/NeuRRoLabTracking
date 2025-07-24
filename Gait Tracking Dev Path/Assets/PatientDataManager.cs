@@ -14,10 +14,10 @@ public class PatientDataManager : MonoBehaviour
     public int day = 1;
     public int trialNum = 1;
     public float totalTime = 60;
-    float distalP = 0.12f;
-    float medialP = 0.11f;
-    float posteriorP = 0.21f;
-    int anklePathLength = 240;
+    string distalP = "12";
+    string medialP = "11";
+    string posteriorP = "21";
+    string anklePathLength = "240";
 
     private bool patientDataSet = false;
 
@@ -47,7 +47,7 @@ public class PatientDataManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("Scene loaded: " + scene.name);
+        //Debug.Log("Scene loaded: " + scene.name);
 
         // Scene has been reloaded, you can reset or reapply any scene-specific values here
         ApplyPatientDataToScene();
@@ -56,13 +56,28 @@ public class PatientDataManager : MonoBehaviour
     private void ApplyPatientDataToScene()
     {
         // Put logic here to apply your saved values to scene-specific components
-        Debug.Log("Reapplying patient data...");
+        //Debug.Log("Reapplying patient data...");
         // Example:
         // FindObjectOfType<SomeUIController>().UpdateDisplay(patientCode, behavior, leg, day);
 
-        if (patientCode == "DefaultPatientCode") return;
-
         Joints joints = GameObject.Find("RigidBodyStruct").GetComponent<Joints>();
+
+        GameObject.Find("TimeTotalInput").GetComponent<InputField>().text = totalTime.ToString();
+        joints.SetTotalTime();
+
+        GameObject.Find("TrailInput").GetComponent<InputField>().text = anklePathLength;
+        //joints.capacity = anklePathLength;
+        //GameObject.Find("TrailInput").GetComponent<InputField>().text = anklePathLength.ToString();
+        //joints.ChangeTrailLength();
+
+        GameObject.Find("Distal%Input").GetComponent<InputField>().text = distalP;
+        //joints.ChangeDistalPercent();
+        GameObject.Find("Medial%Input").GetComponent<InputField>().text = medialP;
+        //joints.ChangeMedialPercent();
+        GameObject.Find("Posterior%Input").GetComponent<InputField>().text = posteriorP;
+        //joints.ChangePosteriorPercent();
+
+        if (patientCode == "DefaultPatientCode") return;
 
         GameObject.Find("PatientCodeInput").GetComponent<InputField>().text = patientCode;
         joints.SetPatientCode();
@@ -87,17 +102,10 @@ public class PatientDataManager : MonoBehaviour
                 dropdown.value = behaviorIndex;
         }
         joints.behavior = behavior;
-
-        GameObject.Find("TimeTotalInput").GetComponent<InputField>().text = totalTime.ToString();
-        joints.SetTotalTime();
-
-        joints.capacity = anklePathLength;
-        GameObject.Find("TrailInput").GetComponent<InputField>().text = anklePathLength.ToString();
-        joints.ChangeTrailLength();
     }
 
     // Optional: method to set patient data
-    public void SetPatientData(string code, string behav, string limb, int sessionDay, int trial, float _totalTime, float distal, float medial, float posterior, int _anklePathLength)
+    public void SetPatientData(string code, string behav, string limb, int sessionDay, int trial, float _totalTime, int _anklePathLength)
     {
         patientCode = code;
         behavior = behav;
@@ -106,9 +114,9 @@ public class PatientDataManager : MonoBehaviour
         patientDataSet = true;
         trialNum = trial;
         totalTime = _totalTime;
-        distalP = distal;
-        medialP = medial;
-        posteriorP = posterior;
-        anklePathLength = _anklePathLength;
+        distalP = GameObject.Find("Distal%Input").GetComponent<InputField>().text;
+        medialP = GameObject.Find("Medial%Input").GetComponent<InputField>().text;
+        posteriorP = GameObject.Find("Posterior%Input").GetComponent<InputField>().text;
+        anklePathLength = GameObject.Find("TrailInput").GetComponent<InputField>().text;
     }
 }
