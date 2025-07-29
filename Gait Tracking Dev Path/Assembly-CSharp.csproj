@@ -64,8 +64,8 @@
     <Compile Include="Assets\Scripts\Joints.cs" />
     <Compile Include="Assets\Scripts\Stylus.cs" />
     <Compile Include="Assets\Scripts\Puppet.cs" />
-    <Compile Include="Assets\ToastManager.cs" />
-    <Compile Include="Assets\PatientDataManager.cs" />
+    <Compile Include="Assets\Scripts\ToastManager.cs" />
+    <Compile Include="Assets\Scripts\PatientDataManager.cs" />
     <Compile Include="Assets\Scripts\TargetMatching.cs" />
     <Compile Include="Assets\Scripts\FileIO.cs" />
     <Compile Include="Assets\Scripts\SlipStream.cs" />

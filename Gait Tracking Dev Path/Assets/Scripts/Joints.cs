@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
+// This script is attached to the RigidBodyStruct object in the scene
 
 public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
 
@@ -122,7 +123,6 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         Application.targetFrameRate = TARGET_FRAME_RATE;
     }
 
-    // Use this for initialization
     void Start ()
     {
         PatientDataManager patientData = GameObject.Find("PatientDataManager").GetComponent<PatientDataManager>();
@@ -216,7 +216,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
             behavior = "Baseline";
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         
@@ -523,14 +523,17 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
     {
         return Mathf.Rad2Deg * Mathf.Acos(Vector3.Dot(joint.transform.forward, floatingAxis)) * Math.Sign(Vector3.Dot(joint.transform.up, floatingAxis)); //flex/ex
     }
+    
     public float InternalExternatlRotation(GameObject jointPartner, Vector3 floatingAxis)
     {
         return Mathf.Rad2Deg * Mathf.Acos(Vector3.Dot(jointPartner.transform.forward, floatingAxis)) * inverter * -(Math.Sign(Vector3.Dot(jointPartner.transform.right, floatingAxis)));//rot
     }
+    
     public float AductionAbduction(GameObject joint, GameObject jointPartner)
     {
         return Mathf.Rad2Deg * Mathf.Acos(Vector3.Dot(joint.transform.right, jointPartner.transform.up)) - inverter * (-Mathf.PI / 2);//ad/ab
     }
+    
     private void createVirtualMarkers()
     {
         int q = 0;
@@ -564,6 +567,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
 
         return rpy;
     }
+    
     private void PoseHipJoint()
     {
         Vector3 femur = Vector3.Normalize(joints[(int)jointEnum.hipJoint].transform.position - joints[(int)jointEnum.kneeJoint].transform.position);
@@ -575,6 +579,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         joints[(int)jointEnum.hipJointPartner].transform.rotation = Quaternion.LookRotation(Vector3.Normalize(Vector3.Cross(inverter * Vector3.Normalize(virtualMarkers[(int)virtualMarkersEnum.FE1].transform.position - virtualMarkers[(int)virtualMarkersEnum.FE2].transform.position), femur)), femur);
         joints[(int)jointEnum.hipJointPartner].transform.parent = thigh.transform; 
     }
+    
     private void PoseKneeJoint()
     {
         Vector3 femur = Vector3.Normalize(joints[(int)jointEnum.hipJoint].transform.position - joints[(int)jointEnum.kneeJoint].transform.position);
@@ -586,6 +591,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         joints[(int)jointEnum.kneeJointPartner].transform.rotation = Quaternion.LookRotation(Vector3.Normalize(Vector3.Cross(ankleLateral, tibia)),tibia);
         joints[(int)jointEnum.kneeJointPartner].transform.parent = shank.transform;
     }
+    
     private void PoseAnkleJoint()
     {
         Vector3 tibia = Vector3.Normalize(joints[(int)jointEnum.kneeJoint].transform.position - joints[(int)jointEnum.ankleJoint].transform.position);
@@ -597,6 +603,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         joints[(int)jointEnum.ankleJointPartner].transform.rotation = Quaternion.LookRotation(footPosterior, tibia);
         joints[(int)jointEnum.ankleJointPartner].transform.parent = foot.transform;
     }
+    
     public void ZeroAngles()
     {
         logger.Log();
@@ -613,11 +620,13 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
 
         logger.Log();
     }
+    
     private void InterpolatePoint(GameObject[] interpolationPoints, Action<Vector3> setCertainJoint)
     {
         Vector3 interp = Vector3.Lerp(interpolationPoints[0].transform.position, interpolationPoints[1].transform.position, 0.5f);
         setCertainJoint(interp);
     }
+
     private void CalculateOffsetPoint(GameObject[] interpolationPoints, float distalPercent, float medialPercent, float posteriorPercent, Action<Vector3> setCertainJoint)
     {
         Vector3 lateral = Vector3.Normalize(interpolationPoints[0].transform.position - interpolationPoints[1].transform.position);
@@ -631,6 +640,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
 
         setCertainJoint(finalInterp);
     }
+
     public void SetHipJoint()
     {
         Debug.Log("setting hip");
@@ -643,6 +653,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         else
             display.text = "ASIS1: (Right front of pelvis) (Right click to set)";
     }
+
     public void SetHipJoint(Vector3 lerpPoint)
     {
 
@@ -669,8 +680,8 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
             interpolationPoints[i] = null;
             i++;
         }
-
     }
+
     public void SetKneeJoint()
     {
         interpolationPoints[0] = interpolationPoints[1] = interpolationPoints[2] = interpolationPoints[3] = null;
@@ -679,6 +690,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         interpolatingPoint = true;
         display.text = "FE1: (Outside of knee) (Right click to set)";
     }
+
     public void SetKneeJoint(Vector3 lerpPoint)
     {
         GameObject[] joints = SetJoint(thigh, this.joints[(int)jointEnum.kneeJoint], this.joints[(int)jointEnum.kneeJointPartner], lerpPoint, interpolationPoints[1].transform.position - interpolationPoints[0].transform.position);
@@ -698,6 +710,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
             i++;
         }
     }
+
     public void SetAnkleJoint()
     {
         interpolationPoints[0] = interpolationPoints[1] = interpolationPoints[2] = interpolationPoints[3] = null;
@@ -706,6 +719,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         interpolatingPoint = true;
         display.text = "LM: (Outside of ankle) (Right click to set)";
     }
+
     public void SetAnkleJoint(Vector3 lerpPoint)
     {
         GameObject[] joints = SetJoint(shank, this.joints[(int)jointEnum.ankleJoint], this.joints[(int)jointEnum.ankleJointPartner], lerpPoint, interpolationPoints[1].transform.position - interpolationPoints[0].transform.position);
@@ -725,6 +739,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
             i++;
         }
     }
+
     private GameObject SetPoint(GameObject parent, GameObject point)
     {
         string name = null;
@@ -749,6 +764,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
 
         return p;
     }
+
     private GameObject SetPoint(GameObject parent, GameObject point, Vector3 position)
     {
         point.transform.position = position;
@@ -763,6 +779,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
 
         return point;
     }
+
     private GameObject[] SetJoint(GameObject parent, GameObject jointPoint, GameObject rotationPartner,  Vector3 position, Vector3 right)
     {
         if (jointPoint != null)
@@ -809,6 +826,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
 
         return jp;
     }
+
     private void updateAnklePath()
     {
         if (currentPoint < capacity)
@@ -874,16 +892,20 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         anklePathRendererObject.GetComponent<LineRenderer>().positionCount = capacity;
     }
 
+    // These functions are used by the hip joint measurement dropdowns in the UI to reset their respective values, as well
+    // as the reset functionality in Patient Data Manager
     public void ChangeDistalPercent()
     {
         string distalSize = GameObject.Find("Distal%Input").GetComponent<InputField>().text;
         distalP = int.Parse(distalSize) / 100;
     }
+
     public void ChangeMedialPercent()
     {
         string medialSize = GameObject.Find("Medial%Input").GetComponent<InputField>().text;
         medialP = int.Parse(medialSize) / 100;
     }
+
     public void ChangePosteriorPercent()
     {
         string posteriorSize = GameObject.Find("Posterior%Input").GetComponent<InputField>().text;
@@ -925,6 +947,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
             //GameObject.Find("LogInput").GetComponent<InputField>().interactable = true;
         }
     }
+
     public void VMShowButtonPress()
     {
         if(tPosed)
@@ -939,10 +962,12 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
             }
         }
     }
+
     public GameObject[] getJoints()
     {
         return joints;
     }
+
     private void SetSide()
     {
         Vector3 pelvisLateral = Vector3.Normalize(interpolationPoints[0].transform.position - interpolationPoints[1].transform.position);
@@ -960,6 +985,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
             inverter = LEFT_LEG_INVERT;
         }
     }
+
     public void SetLogTimer()
     {
         if (GameObject.Find("LogInput").GetComponent<InputField>().IsInteractable())
@@ -1179,15 +1205,18 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
             SetFileName();
         }
     }
+
     public void SetDefaultPaths(string filePath, string fileName)
     {
         GameObject.Find("FilePathInput").GetComponent<InputField>().text = filePath;
         GameObject.Find("FileNameInput").GetComponent<InputField>().text = fileName;
     }
+
     public void UpdateDisplayedTime(string newTime)
     {
         GameObject.Find("LogInput").GetComponent<InputField>().text = newTime;
     }
+
     private void GUISafety()
     {
         foreach (GameObject button in GameObject.FindGameObjectsWithTag("PosedDependant"))
@@ -1195,10 +1224,12 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
             button.GetComponent<Button>().interactable = !button.GetComponent<Button>().interactable;
         }
     }
+
     internal FileIO getFileIO()
     {
         return logger;
     }
+
     public void showAnklePathButton()
     {
         anklePathRendererObject.GetComponent<LineRenderer>().enabled = !anklePathRendererObject.GetComponent<LineRenderer>().enabled;
@@ -1240,6 +1271,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    // This is just a helper function for the Toast UI system
     private void DoNothing()
     {
         return;

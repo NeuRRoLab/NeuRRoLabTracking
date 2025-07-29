@@ -4,6 +4,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+// This file is here almost entirely for the functionality of the reset calibration button, since 
+// recalibration was not intended as a feature of the original program. It is triggered by Joints.cs
+// when the reset button is pressed, and is otherwise not a consistent tracker of any of the data
+// it keeps between scenes. That data is all in Joints, largely with similar or the same names.
+// This file exists as a band-aid solution to resetting calibration by just reloading the whole scene.
+
 public class PatientDataManager : MonoBehaviour
 {
     public string filePath = "";
@@ -47,35 +53,22 @@ public class PatientDataManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        //Debug.Log("Scene loaded: " + scene.name);
-
-        // Scene has been reloaded, you can reset or reapply any scene-specific values here
+        // Scene has been reloaded, reset or reapply any scene-specific values here
         ApplyPatientDataToScene();
     }
 
     private void ApplyPatientDataToScene()
     {
-        // Put logic here to apply your saved values to scene-specific components
-        //Debug.Log("Reapplying patient data...");
-        // Example:
-        // FindObjectOfType<SomeUIController>().UpdateDisplay(patientCode, behavior, leg, day);
-
         Joints joints = GameObject.Find("RigidBodyStruct").GetComponent<Joints>();
 
         GameObject.Find("TimeTotalInput").GetComponent<InputField>().text = totalTime.ToString();
         joints.SetTotalTime();
 
         GameObject.Find("TrailInput").GetComponent<InputField>().text = anklePathLength;
-        //joints.capacity = anklePathLength;
-        //GameObject.Find("TrailInput").GetComponent<InputField>().text = anklePathLength.ToString();
-        //joints.ChangeTrailLength();
 
         GameObject.Find("Distal%Input").GetComponent<InputField>().text = distalP;
-        //joints.ChangeDistalPercent();
         GameObject.Find("Medial%Input").GetComponent<InputField>().text = medialP;
-        //joints.ChangeMedialPercent();
         GameObject.Find("Posterior%Input").GetComponent<InputField>().text = posteriorP;
-        //joints.ChangePosteriorPercent();
 
         if (patientCode == "DefaultPatientCode") return;
 
@@ -104,7 +97,7 @@ public class PatientDataManager : MonoBehaviour
         joints.behavior = behavior;
     }
 
-    // Optional: method to set patient data
+    // Called by Joints.cs when the reset button is pressed
     public void SetPatientData(string code, string behav, string limb, int sessionDay, int trial, float _totalTime, int _anklePathLength)
     {
         patientCode = code;
