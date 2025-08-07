@@ -15,7 +15,7 @@ Loading C:\Users\evmarcus\Documents\GaitTracking\NeuRRoLabTracking\Gait Tracking
 Platform assembly: C:\Users\evmarcus\Documents\GaitTracking\NeuRRoLabTracking\Gait Tracking Dev Path\NeuRRoGait\Gait Tracking_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading C:\Users\evmarcus\Documents\GaitTracking\NeuRRoLabTracking\Gait Tracking Dev Path\NeuRRoGait\Gait Tracking_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
 Platform assembly: C:\Users\evmarcus\Documents\GaitTracking\NeuRRoLabTracking\Gait Tracking Dev Path\NeuRRoGait\Gait Tracking_Data\Managed\System.Core.dll (this message is harmless)
-- Completed reload, in  0.044 seconds
+- Completed reload, in  0.041 seconds
 desktop: 1600x900 60Hz; virtual: 3520x1080 at 0,-140
 <RI> Initializing input.
 <RI> Input initialized.
@@ -24,6 +24,14 @@ Platform assembly: C:\Users\evmarcus\Documents\GaitTracking\NeuRRoLabTracking\Ga
 Platform assembly: C:\Users\evmarcus\Documents\GaitTracking\NeuRRoLabTracking\Gait Tracking Dev Path\NeuRRoGait\Gait Tracking_Data\Managed\System.Configuration.dll (this message is harmless)
 Platform assembly: C:\Users\evmarcus\Documents\GaitTracking\NeuRRoLabTracking\Gait Tracking Dev Path\NeuRRoGait\Gait Tracking_Data\Managed\System.Xml.dll (this message is harmless)
 Setting up 3 worker threads for Enlighten.
-  Thread -> id: 4aa8 -> priority: 1 
-  Thread -> id: 5878 -> priority: 1 
-  Thread -> id: 2a7c -> priority: 1 
+  Thread -> id: 2c50 -> priority: 1 
+  Thread -> id: 30a8 -> priority: 1 
+  Thread -> id: 53a4 -> priority: 1 
+InvalidOperationException: The process already finished.
+  at System.Diagnostics.Process.Close (Int32 signo) [0x00000] in <filename unknown>:0 
+  at System.Diagnostics.Process.CloseMainWindow () [0x00000] in <filename unknown>:0 
+  at (wrapper remoting-invoke-with-check) System.Diagnostics.Process:CloseMainWindow ()
+  at SlipStream.OnApplicationQuit () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+

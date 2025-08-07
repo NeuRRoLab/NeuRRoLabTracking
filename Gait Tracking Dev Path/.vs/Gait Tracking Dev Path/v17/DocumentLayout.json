@@ -7,7 +7,7 @@
       "RelativeMoniker": "D:0:0:{79E70795-36E7-561D-D7F5-85F9BAC1C295}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\joints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{73190647-7F58-F712-3DED-0B167F96C2FE}|SimpleFileBrowser.Runtime.csproj|c:\\users\\evmarcus\\documents\\gaittracking\\neurrolabtracking\\gait tracking dev path\\assets\\plugins\\simplefilebrowser\\scripts\\filebrowser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{73190647-7F58-F712-3DED-0B167F96C2FE}|SimpleFileBrowser.Runtime.csproj|C:\\Users\\evmarcus\\Documents\\GaitTracking\\NeuRRoLabTracking\\Gait Tracking Dev Path\\assets\\plugins\\simplefilebrowser\\scripts\\filebrowser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{73190647-7F58-F712-3DED-0B167F96C2FE}|SimpleFileBrowser.Runtime.csproj|solutionrelative:assets\\plugins\\simplefilebrowser\\scripts\\filebrowser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -18,21 +18,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "FileBrowser.cs",
-              "DocumentMoniker": "C:\\Users\\evmarcus\\Documents\\GaitTracking\\NeuRRoLabTracking\\Gait Tracking Dev Path\\Assets\\Plugins\\SimpleFileBrowser\\Scripts\\FileBrowser.cs",
-              "RelativeDocumentMoniker": "Assets\\Plugins\\SimpleFileBrowser\\Scripts\\FileBrowser.cs",
-              "ToolTip": "C:\\Users\\evmarcus\\Documents\\GaitTracking\\NeuRRoLabTracking\\Gait Tracking Dev Path\\Assets\\Plugins\\SimpleFileBrowser\\Scripts\\FileBrowser.cs",
-              "RelativeToolTip": "Assets\\Plugins\\SimpleFileBrowser\\Scripts\\FileBrowser.cs",
-              "ViewState": "AgIAAEkLAAAAAAAAAAApwCcLAAAjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-07T19:26:18.183Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -41,10 +28,22 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\Joints.cs",
               "ToolTip": "C:\\Users\\evmarcus\\Documents\\GaitTracking\\NeuRRoLabTracking\\Gait Tracking Dev Path\\Assets\\Scripts\\Joints.cs",
               "RelativeToolTip": "Assets\\Scripts\\Joints.cs",
-              "ViewState": "AgIAAFgEAAAAAAAAAAA7wG8EAAAWAAAAAAAAAA==",
+              "ViewState": "AgIAAPkEAAAAAAAAAAAtwBUFAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-07T19:23:55.682Z",
+              "WhenOpened": "2025-08-07T22:11:27.587Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FileBrowser.cs",
+              "DocumentMoniker": "C:\\Users\\evmarcus\\Documents\\GaitTracking\\NeuRRoLabTracking\\Gait Tracking Dev Path\\Assets\\Plugins\\SimpleFileBrowser\\Scripts\\FileBrowser.cs",
+              "RelativeDocumentMoniker": "Assets\\Plugins\\SimpleFileBrowser\\Scripts\\FileBrowser.cs",
+              "ToolTip": "C:\\Users\\evmarcus\\Documents\\GaitTracking\\NeuRRoLabTracking\\Gait Tracking Dev Path\\Assets\\Plugins\\SimpleFileBrowser\\Scripts\\FileBrowser.cs",
+              "RelativeToolTip": "Assets\\Plugins\\SimpleFileBrowser\\Scripts\\FileBrowser.cs",
+              "ViewState": "AgIAAPAKAAAAAAAAAAAAACcLAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-07T19:26:18.183Z"
             }
           ]
         }

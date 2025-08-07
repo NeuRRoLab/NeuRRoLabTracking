@@ -18,8 +18,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Joints.cs",
+              "DocumentMoniker": "C:\\Users\\evmarcus\\Documents\\GaitTracking\\NeuRRoLabTracking\\Gait Tracking Dev Path\\Assets\\Scripts\\Joints.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Joints.cs",
+              "ToolTip": "C:\\Users\\evmarcus\\Documents\\GaitTracking\\NeuRRoLabTracking\\Gait Tracking Dev Path\\Assets\\Scripts\\Joints.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Joints.cs",
+              "ViewState": "AgIAAPkEAAAAAAAAAAAtwA8FAABlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-07T22:11:27.587Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 1,
@@ -28,22 +41,9 @@
               "RelativeDocumentMoniker": "Assets\\Plugins\\SimpleFileBrowser\\Scripts\\FileBrowser.cs",
               "ToolTip": "C:\\Users\\evmarcus\\Documents\\GaitTracking\\NeuRRoLabTracking\\Gait Tracking Dev Path\\Assets\\Plugins\\SimpleFileBrowser\\Scripts\\FileBrowser.cs",
               "RelativeToolTip": "Assets\\Plugins\\SimpleFileBrowser\\Scripts\\FileBrowser.cs",
-              "ViewState": "AgIAAEkLAAAAAAAAAAApwCcLAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAAPAKAAAAAAAAAAAAACcLAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-07T19:26:18.183Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Joints.cs",
-              "DocumentMoniker": "C:\\Users\\evmarcus\\Documents\\GaitTracking\\NeuRRoLabTracking\\Gait Tracking Dev Path\\Assets\\Scripts\\Joints.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Joints.cs",
-              "ToolTip": "C:\\Users\\evmarcus\\Documents\\GaitTracking\\NeuRRoLabTracking\\Gait Tracking Dev Path\\Assets\\Scripts\\Joints.cs*",
-              "RelativeToolTip": "Assets\\Scripts\\Joints.cs*",
-              "ViewState": "AgIAAGUEAAAAAAAAAAAAAIIEAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-07T19:23:55.682Z",
               "EditorCaption": ""
             }
           ]

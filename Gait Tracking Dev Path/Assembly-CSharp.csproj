@@ -95,6 +95,7 @@
     <None Include="Assets\Logs\Hello2\1\Hello2_Right_TargetMatch_1.txt" />
     <None Include="Assets\Logs\Schmebulock\1\Schmebulock_Right_Baseline_1.txt" />
     <None Include="Assets\Logs\session-2025-06-08_07-25-18-PM.txt" />
+    <None Include="Assets\Logs\t\1\t_Right_Baseline_1.txt" />
     <None Include="Assets\Logs\hogb\1\hogb_Right_Baseline_1.txt" />
     <None Include="Assets\Logs\kkkk\1\kkkk_Right_Baseline_1.txt" />
     <None Include="Assets\Logs\Schmebulock\1\Schmebulock_Right_Basic_2.txt" />
@@ -474,6 +475,10 @@
     </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>Assets\Plugins\x86_64\System.Windows.Forms.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="mscorlib">

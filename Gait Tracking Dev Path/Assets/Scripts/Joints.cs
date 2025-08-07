@@ -8,6 +8,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+using System.Windows.Forms;
+#endif
+
 // This script is attached to the RigidBodyStruct object in the scene
 
 public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
@@ -122,7 +126,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
 
     void Awake()
     {
-        Application.targetFrameRate = TARGET_FRAME_RATE;
+        UnityEngine.Application.targetFrameRate = TARGET_FRAME_RATE;
     }
 
     void Start ()
@@ -1012,7 +1016,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         string input = GameObject.Find("PatientCodeInput").GetComponent<InputField>().text;
         patientCode = input;
 
-        filePath = Application.dataPath + @"/Logs/" + patientCode + "/" + day.ToString() + "/";
+        filePath = UnityEngine.Application.dataPath + @"/Logs/" + patientCode + "/" + day.ToString() + "/";
 
         //string path = EditorUtility.SaveFolderPanel("Save logging data to", filepath, "");
 
@@ -1128,12 +1132,24 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
 
     public string OpenFolder()
     {
-        StartCoroutine(ShowFolderPicker());
+        string startPath = filePath;
+        using (var dialog = new FolderBrowserDialog())
+        {
+            dialog.SelectedPath = startPath;
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                return dialog.SelectedPath;
+            }
+        }
 
-        if (FileBrowser.Success)
-            return FileBrowser.Result[0];
-        else
-            return "";
+        return "";
+
+        //StartCoroutine(ShowFolderPicker());
+
+        //if (FileBrowser.Success)
+        //    return FileBrowser.Result[0];
+        //else
+        //    return "";
     }
 
     IEnumerator ShowFolderPicker()
@@ -1161,12 +1177,24 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
 
     public string OpenFile()
     {
-        StartCoroutine(ShowFilePicker());
+        string startPath = filePath;
+        using (var dialog = new OpenFileDialog())
+        {
+            dialog.InitialDirectory = startPath;
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                return dialog.FileName;
+            }
+        }
 
-        if (FileBrowser.Success)
-            return FileBrowser.Result[0];
-        else
-            return "";
+        return "";
+
+        //StartCoroutine(ShowFilePicker());
+
+        //if (FileBrowser.Success)
+        //    return FileBrowser.Result[0];
+        //else
+        //    return "";
     }
 
     IEnumerator ShowFilePicker()
@@ -1265,7 +1293,7 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
     {
         foreach (GameObject button in GameObject.FindGameObjectsWithTag("PosedDependant"))
         {
-            button.GetComponent<Button>().interactable = !button.GetComponent<Button>().interactable;
+            button.GetComponent<UnityEngine.UI.Button>().interactable = !button.GetComponent<UnityEngine.UI.Button>().interactable;
         }
     }
 
