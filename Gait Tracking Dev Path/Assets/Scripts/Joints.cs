@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SimpleFileBrowser;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
@@ -174,6 +176,8 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
 
         skeleton = GameObject.Find("LegContainer").GetComponent<Puppet>();
         averageCam = new GameObject("CameraFocus");
+
+        FileBrowser.SetFilters(true);
 
         GUISafety();
 
@@ -1108,7 +1112,12 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
     // Called when the file explorer icon next to the file path UI is pressed
     public void OpenFolderExplorer()
     {
-        string filepath = EditorUtility.OpenFolderPanel("", filePath, "");
+        string filepath = "";
+#if UNITY_EDITOR
+        filepath = EditorUtility.OpenFolderPanel("", filePath, "");
+#else
+        filepath = OpenFolder();
+#endif
         if (filepath != "")
         {
             Debug.Log(filepath);
@@ -1117,10 +1126,30 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
         }
     }
 
+    public string OpenFolder()
+    {
+        StartCoroutine(ShowFolderPicker());
+
+        if (FileBrowser.Success)
+            return FileBrowser.Result[0];
+        else
+            return "";
+    }
+
+    IEnumerator ShowFolderPicker()
+    {
+        yield return FileBrowser.WaitForSaveDialog(FileBrowser.PickMode.Folders, false, filePath, null, "Select Folder", "Load");
+    }
+
     // Called when the file explorer icon next to the file name UI is pressed
     public void OpenFileExplorer()
     {
-        string filepath = EditorUtility.OpenFilePanel(fileName, filePath, "txt");
+        string filepath = "";
+#if UNITY_EDITOR
+        filepath = EditorUtility.OpenFilePanel(fileName, filePath, "txt");
+#else
+        filepath = OpenFile();
+#endif
         if (filepath != "")
         {
             Debug.Log(filepath);
@@ -1128,6 +1157,21 @@ public class Joints : MonoBehaviour, FileIO.LoggingButtonHandler  {
             GameObject.Find("FileNameInput").GetComponent<InputField>().text = name;
             SetFileName();
         }
+    }
+
+    public string OpenFile()
+    {
+        StartCoroutine(ShowFilePicker());
+
+        if (FileBrowser.Success)
+            return FileBrowser.Result[0];
+        else
+            return "";
+    }
+
+    IEnumerator ShowFilePicker()
+    {
+        yield return FileBrowser.WaitForSaveDialog(FileBrowser.PickMode.Files, false, filePath, null, "Select File", "Load");
     }
 
     // Called by various conditions when the logger needs to be updated, like changing the parameters of the test in the menu, or when the trial number gets updated
